@@ -12,13 +12,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useReveal } from '@/hooks/use-reveal';
 
-const HERO = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/5daecb57-d198-4fc3-816a-fd2bfb9b6dcd.jpg';
 const WORK1 = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/1a1d29c5-956a-41fd-ac62-b0d8097b808f.jpg';
 const WORK2 = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/2acbe21b-2474-4cfd-9376-21712814fcc0.jpg';
 
 const SALON1 = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/074f612d-4938-414a-8d9b-d0025d9ab0c1.png';
 const SALON2 = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/b675690e-60aa-4358-b342-8cd6994410ac.png';
 const FACADE = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/32f076df-c8e7-4c19-b245-e24fbfbdc647.png';
+const RECEPTION = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/8d32bce9-325f-4d24-a07e-bcfe7343884b.png';
+const TEA = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/f1d80577-2dc3-4171-84ff-3967d742f547.png';
 
 const NAV = [
   { id: 'about', label: 'О салоне' },
@@ -58,8 +59,10 @@ const REVIEWS = [
 
 const GALLERY = [
   { src: SALON2, alt: 'Зал салона с кирпичными стенами', span: 'md:col-span-2 md:row-span-2' },
+  { src: RECEPTION, alt: 'Золотая ресепшн-зона', span: '' },
+  { src: TEA, alt: 'Чаепитие для гостей', span: '' },
   { src: SALON1, alt: 'Зона ресепшн и витрина', span: '' },
-  { src: FACADE, alt: 'Фасад салона Pravda Pro Volosy', span: '' },
+  { src: FACADE, alt: 'Фасад салона Pravda Pro Volosy', span: 'md:col-span-2' },
 ];
 
 const Index = () => {
@@ -179,68 +182,97 @@ const Index = () => {
       </header>
 
       {/* HERO */}
-      <section id="hero" className="relative overflow-hidden pt-16">
-        <div className="grain absolute inset-0 opacity-60" />
-        <div className="pointer-events-none absolute -right-32 top-20 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
-        <div className="pointer-events-none absolute -left-32 bottom-0 h-80 w-80 rounded-full bg-accent/10 blur-3xl" />
-        <div className="container relative grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
-          <div className="animate-fade-up">
-            <span className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-4 py-1.5 text-sm font-medium text-accent-foreground">
+      <section id="hero" className="relative flex min-h-screen items-center overflow-hidden">
+        {/* Фоновое фото салона с параллаксом */}
+        <div className="absolute inset-0">
+          <img
+            ref={heroImgRef}
+            src={RECEPTION}
+            alt="Салон красоты Pravda Pro Volosy"
+            className="parallax-img h-[120%] w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/20" />
+        </div>
+
+        {/* Декоративные световые пятна */}
+        <div className="pointer-events-none absolute -right-32 top-20 h-96 w-96 rounded-full bg-accent/20 blur-3xl" />
+        <div className="pointer-events-none absolute -left-20 bottom-0 h-80 w-80 rounded-full bg-primary/15 blur-3xl" />
+
+        <div className="container relative z-10 pt-24">
+          <div className="max-w-3xl animate-fade-up">
+            <span className="inline-flex items-center gap-2 rounded-full border border-accent/50 bg-accent/15 px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
               <Icon name="Award" size={16} className="text-accent" />
-              Лауреат «Хорошего места 2026»
+              Лауреат «Хорошего места 2026» · Рейтинг 5,0
             </span>
-            <h1 className="mt-6 font-display text-5xl font-semibold leading-[1.05] text-balance md:text-7xl">
-              Салон красоты, где о волосах знают{' '}
-              <span className="shimmer-text italic">правду</span>
+            <h1 className="mt-6 font-display text-6xl font-semibold leading-[0.98] text-balance md:text-8xl">
+              Ваши волосы
+              <br />
+              заслуживают
+              <br />
+              <span className="shimmer-text italic">правды</span>
             </h1>
-            <p className="mt-6 max-w-md text-lg text-muted-foreground">
-              Стрижки, сложное окрашивание, наращивание и уход в самом сердце Перми.
-              Рейтинг 5,0 на основе 140 оценок.
+            <p className="mt-7 max-w-xl text-xl text-muted-foreground">
+              Премиальный салон красоты в Перми. Стрижки, сложное окрашивание,
+              наращивание и уход — с заботой, чаем и безупречным результатом.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Button size="lg" className="rounded-full text-base transition-transform hover:scale-105" onClick={() => setOpen(true)}>
-                Записаться онлайн
-                <Icon name="ArrowRight" size={18} className="ml-1" />
-              </Button>
-              <button
-                onClick={() => scrollTo('services')}
-                className="text-sm font-medium underline-offset-4 hover:underline"
+
+            <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              <Button
+                size="lg"
+                className="group h-14 rounded-full px-8 text-base shadow-lg shadow-primary/30 transition-all hover:scale-105 hover:shadow-xl hover:shadow-primary/40"
+                onClick={() => setOpen(true)}
               >
-                Смотреть услуги
-              </button>
+                Записаться онлайн
+                <Icon name="ArrowRight" size={20} className="ml-1 transition-transform group-hover:translate-x-1" />
+              </Button>
+              <a
+                href="tel:+79091146099"
+                className="inline-flex h-14 items-center gap-2 rounded-full border border-border bg-background/60 px-7 text-base font-medium backdrop-blur-sm transition-colors hover:bg-background"
+              >
+                <Icon name="Phone" size={18} className="text-primary" />
+                +7 (909) 114-60-99
+              </a>
             </div>
-            <div className="mt-10 flex items-center gap-8">
-              <div>
-                <div className="font-display text-4xl font-semibold text-primary">5,0</div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">Рейтинг</div>
-              </div>
-              <div className="h-10 w-px bg-border" />
-              <div>
-                <div className="font-display text-4xl font-semibold text-primary">127</div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">Отзывов</div>
-              </div>
-              <div className="h-10 w-px bg-border" />
-              <div>
-                <div className="font-display text-4xl font-semibold text-primary">87</div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">Фото работ</div>
-              </div>
+
+            <div className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-5">
+              {[
+                { v: '5,0', l: 'Рейтинг' },
+                { v: '127', l: 'Отзывов' },
+                { v: '3 года', l: 'Дарим красоту' },
+                { v: '23:00', l: 'Работаем до' },
+              ].map((s, i) => (
+                <div key={s.l} className="flex items-center gap-10">
+                  {i > 0 && <div className="hidden h-10 w-px bg-border sm:block" />}
+                  <div>
+                    <div className="font-display text-4xl font-semibold text-primary">{s.v}</div>
+                    <div className="text-xs uppercase tracking-wider text-muted-foreground">{s.l}</div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-          <div className="relative animate-fade-up [animation-delay:200ms] [perspective:1200px]">
-            <div className="tilt-3d relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-2xl">
-              <img ref={heroImgRef} src={HERO} alt="Интерьер салона Pravda Pro Volosy" className="parallax-img h-full w-full object-cover" />
-            </div>
-            <div className="animate-float-slow absolute -left-6 bottom-10 hidden rounded-2xl bg-card p-4 shadow-xl md:block">
-              <div className="flex items-center gap-1 text-accent">
-                {[...Array(5)].map((_, i) => (
-                  <Icon key={i} name="Star" size={16} className="fill-current" />
-                ))}
-              </div>
-              <div className="mt-1 text-sm font-medium">«Настоящие профессионалы»</div>
-            </div>
-            <div className="animate-spin-slow absolute -right-4 -top-4 hidden h-24 w-24 rounded-full border border-dashed border-primary/40 md:block" />
           </div>
         </div>
+
+        {/* Плавающая карточка отзыва */}
+        <div className="animate-float-slow absolute bottom-12 right-8 z-10 hidden max-w-xs rounded-2xl border border-border/60 bg-card/90 p-5 shadow-xl backdrop-blur-md lg:block">
+          <div className="flex items-center gap-1 text-accent">
+            {[...Array(5)].map((_, i) => (
+              <Icon key={i} name="Star" size={16} className="fill-current" />
+            ))}
+          </div>
+          <p className="mt-2 text-sm">«Уютная атмосфера, работают настоящие профессионалы. 10/10!»</p>
+          <div className="mt-2 text-xs text-muted-foreground">— Вера К.</div>
+        </div>
+
+        {/* Индикатор скролла */}
+        <button
+          onClick={() => scrollTo('about')}
+          className="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <span className="text-xs uppercase tracking-[0.3em]">Листайте</span>
+          <Icon name="ChevronDown" size={22} className="animate-bounce" />
+        </button>
       </section>
 
       {/* ABOUT */}
