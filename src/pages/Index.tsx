@@ -21,9 +21,16 @@ const FACADE = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe
 const RECEPTION = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/8d32bce9-325f-4d24-a07e-bcfe7343884b.png';
 const TEA = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/f1d80577-2dc3-4171-84ff-3967d742f547.png';
 
+const PORTFOLIO = [
+  { src: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/db87e1b0-f985-45cf-95c2-44bf1fdd46b1.png', title: 'Кератиновое выпрямление', tag: 'Уход' },
+  { src: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/91e24a1c-ede1-4d01-bca5-6407d452db1d.png', title: 'Холодный блонд', tag: 'Окрашивание' },
+  { src: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/aa2dc6f9-f5bc-424b-8c62-ec31faa40957.png', title: 'Балаяж с растяжкой', tag: 'Окрашивание' },
+];
+
 const NAV = [
   { id: 'about', label: 'О салоне' },
   { id: 'services', label: 'Услуги' },
+  { id: 'portfolio', label: 'Работы' },
   { id: 'gallery', label: 'Интерьер' },
   { id: 'prices', label: 'Прайс' },
   { id: 'reviews', label: 'Отзывы' },
@@ -331,6 +338,48 @@ const Index = () => {
                 <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PORTFOLIO — WORKS */}
+      <section id="portfolio" className="border-y border-border/60 bg-secondary/40 py-20">
+        <div className="container">
+          <div className="reveal mb-12 text-center">
+            <span className="text-sm uppercase tracking-[0.3em] text-primary">Работы</span>
+            <h2 className="mt-4 font-display text-4xl font-semibold md:text-5xl">Примеры наших работ</h2>
+            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+              Сложное окрашивание, идеальный блонд и зеркальный блеск после ухода —
+              результат, который говорит сам за себя.
+            </p>
+          </div>
+          <div className="grid gap-6 [perspective:1200px] sm:grid-cols-2 lg:grid-cols-3">
+            {PORTFOLIO.map((p, i) => (
+              <div
+                key={p.title}
+                className="reveal-scale group relative aspect-[3/4] overflow-hidden rounded-2xl shadow-md"
+                style={{ transitionDelay: `${i * 100}ms` }}
+              >
+                <img
+                  src={p.src}
+                  alt={p.title}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
+                <span className="absolute left-4 top-4 rounded-full bg-background/85 px-3 py-1 text-xs font-medium backdrop-blur-sm">
+                  {p.tag}
+                </span>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="font-display text-2xl font-semibold text-background">{p.title}</h3>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <Button size="lg" className="rounded-full transition-transform hover:scale-105" onClick={() => setOpen(true)}>
+              Хочу так же — записаться
+              <Icon name="ArrowRight" size={18} className="ml-1" />
+            </Button>
           </div>
         </div>
       </section>
