@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,15 +10,20 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useReveal } from '@/hooks/use-reveal';
 
 const HERO = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/5daecb57-d198-4fc3-816a-fd2bfb9b6dcd.jpg';
 const WORK1 = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/1a1d29c5-956a-41fd-ac62-b0d8097b808f.jpg';
 const WORK2 = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/2acbe21b-2474-4cfd-9376-21712814fcc0.jpg';
 
+const SALON1 = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/074f612d-4938-414a-8d9b-d0025d9ab0c1.png';
+const SALON2 = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/b675690e-60aa-4358-b342-8cd6994410ac.png';
+const FACADE = 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/32f076df-c8e7-4c19-b245-e24fbfbdc647.png';
+
 const NAV = [
   { id: 'about', label: 'О салоне' },
   { id: 'services', label: 'Услуги' },
-  { id: 'masters', label: 'Мастера' },
+  { id: 'gallery', label: 'Интерьер' },
   { id: 'prices', label: 'Прайс' },
   { id: 'reviews', label: 'Отзывы' },
   { id: 'contacts', label: 'Контакты' },
@@ -31,13 +36,6 @@ const SERVICES = [
   { icon: 'Droplets', title: 'Уход и восстановление', desc: 'Кератин, ботокс, нанопластика, биоламинирование, трихологический пилинг.' },
   { icon: 'Wind', title: 'Укладки', desc: 'Голливудские локоны, вечерние и свадебные причёски, прикорневой объём.' },
   { icon: 'Eye', title: 'Брови, ресницы, макияж', desc: 'Ламинирование ресниц, оформление бровей, дневной и вечерний макияж.' },
-];
-
-const MASTERS = [
-  { name: 'Рейна', role: 'Мастер по наращиванию', tags: ['Наращивание', 'Уход'], emoji: '✨' },
-  { name: 'Анастасия', role: 'Колорист', tags: ['Окрашивание', 'Балаяж'], emoji: '🎨' },
-  { name: 'Мария', role: 'Стилист-парикмахер', tags: ['Стрижки', 'Укладки'], emoji: '💇‍♀️' },
-  { name: 'Ольга', role: 'Бровист, лэшмейкер', tags: ['Брови', 'Ресницы'], emoji: '👁️' },
 ];
 
 const PRICES = [
@@ -58,50 +56,52 @@ const REVIEWS = [
   { name: 'Диана', text: 'Отличное место, рекомендую всем! Качество работы на высоте, обязательно вернусь снова.', stars: 5 },
 ];
 
+const GALLERY = [
+  { src: SALON2, alt: 'Зал салона с кирпичными стенами', span: 'md:col-span-2 md:row-span-2' },
+  { src: SALON1, alt: 'Зона ресепшн и витрина', span: '' },
+  { src: FACADE, alt: 'Фасад салона Pravda Pro Volosy', span: '' },
+];
+
 const Index = () => {
+  useReveal();
   const [open, setOpen] = useState(false);
   const [service, setService] = useState('');
-  const [master, setMaster] = useState('');
   const [time, setTime] = useState('');
+  const heroImgRef = useRef<HTMLImageElement>(null);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (heroImgRef.current) {
+        const y = window.scrollY;
+        heroImgRef.current.style.transform = `translateY(${y * 0.12}px) scale(1.05)`;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const SERVICE_NAMES = SERVICES.map((s) => s.title);
 
   const BookingForm = () => (
     <div className="space-y-5">
       <div>
         <Label className="text-sm font-medium">Услуга</Label>
         <div className="mt-2 flex flex-wrap gap-2">
-          {SERVICES.map((s) => (
+          {SERVICE_NAMES.map((s) => (
             <button
-              key={s.title}
-              onClick={() => setService(s.title)}
-              className={`rounded-full border px-4 py-2 text-sm transition-colors ${
-                service === s.title
+              key={s}
+              onClick={() => setService(s)}
+              className={`rounded-full border px-4 py-2 text-sm transition-all hover:scale-105 ${
+                service === s
                   ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-border bg-background hover:border-primary'
               }`}
             >
-              {s.title}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div>
-        <Label className="text-sm font-medium">Мастер</Label>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {MASTERS.map((m) => (
-            <button
-              key={m.name}
-              onClick={() => setMaster(m.name)}
-              className={`rounded-full border px-4 py-2 text-sm transition-colors ${
-                master === m.name
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'border-border bg-background hover:border-primary'
-              }`}
-            >
-              {m.emoji} {m.name}
+              {s}
             </button>
           ))}
         </div>
@@ -113,7 +113,7 @@ const Index = () => {
             <button
               key={t}
               onClick={() => setTime(t)}
-              className={`rounded-full border px-4 py-2 text-sm transition-colors ${
+              className={`rounded-full border px-4 py-2 text-sm transition-all hover:scale-105 ${
                 time === t
                   ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-border bg-background hover:border-primary'
@@ -145,7 +145,7 @@ const Index = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       {/* HEADER */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
         <div className="container flex h-16 items-center justify-between">
@@ -166,7 +166,7 @@ const Index = () => {
           </nav>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" className="rounded-full">Записаться</Button>
+              <Button size="sm" className="rounded-full transition-transform hover:scale-105">Записаться</Button>
             </DialogTrigger>
             <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
               <DialogHeader>
@@ -181,6 +181,8 @@ const Index = () => {
       {/* HERO */}
       <section id="hero" className="relative overflow-hidden pt-16">
         <div className="grain absolute inset-0 opacity-60" />
+        <div className="pointer-events-none absolute -right-32 top-20 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+        <div className="pointer-events-none absolute -left-32 bottom-0 h-80 w-80 rounded-full bg-accent/10 blur-3xl" />
         <div className="container relative grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
           <div className="animate-fade-up">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-4 py-1.5 text-sm font-medium text-accent-foreground">
@@ -189,14 +191,14 @@ const Index = () => {
             </span>
             <h1 className="mt-6 font-display text-5xl font-semibold leading-[1.05] text-balance md:text-7xl">
               Салон красоты, где о волосах знают{' '}
-              <span className="italic text-primary">правду</span>
+              <span className="shimmer-text italic">правду</span>
             </h1>
             <p className="mt-6 max-w-md text-lg text-muted-foreground">
               Стрижки, сложное окрашивание, наращивание и уход в самом сердце Перми.
               Рейтинг 5,0 на основе 140 оценок.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Button size="lg" className="rounded-full text-base" onClick={() => setOpen(true)}>
+              <Button size="lg" className="rounded-full text-base transition-transform hover:scale-105" onClick={() => setOpen(true)}>
                 Записаться онлайн
                 <Icon name="ArrowRight" size={18} className="ml-1" />
               </Button>
@@ -224,9 +226,9 @@ const Index = () => {
               </div>
             </div>
           </div>
-          <div className="relative animate-fade-up [animation-delay:200ms]">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-2xl">
-              <img src={HERO} alt="Интерьер салона Pravda Pro Volosy" className="h-full w-full object-cover" />
+          <div className="relative animate-fade-up [animation-delay:200ms] [perspective:1200px]">
+            <div className="tilt-3d relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-2xl">
+              <img ref={heroImgRef} src={HERO} alt="Интерьер салона Pravda Pro Volosy" className="parallax-img h-full w-full object-cover" />
             </div>
             <div className="animate-float-slow absolute -left-6 bottom-10 hidden rounded-2xl bg-card p-4 shadow-xl md:block">
               <div className="flex items-center gap-1 text-accent">
@@ -236,6 +238,7 @@ const Index = () => {
               </div>
               <div className="mt-1 text-sm font-medium">«Настоящие профессионалы»</div>
             </div>
+            <div className="animate-spin-slow absolute -right-4 -top-4 hidden h-24 w-24 rounded-full border border-dashed border-primary/40 md:block" />
           </div>
         </div>
       </section>
@@ -243,15 +246,16 @@ const Index = () => {
       {/* ABOUT */}
       <section id="about" className="border-y border-border/60 bg-secondary/40 py-20">
         <div className="container grid gap-10 md:grid-cols-2 md:items-center">
-          <div>
+          <div className="reveal">
             <span className="text-sm uppercase tracking-[0.3em] text-primary">О салоне</span>
             <h2 className="mt-4 font-display text-4xl font-semibold md:text-5xl">
               Уютное пространство красоты в Перми
             </h2>
             <p className="mt-6 text-lg text-muted-foreground">
               Pravda Pro Volosy — это команда мастеров, влюблённых в своё дело.
-              Мы создаём не просто причёски, а уверенность и настроение.
-              Чистота, забота о каждом клиенте и честный подход — вот наша правда о волосах.
+              Кирпичные стены, дизайнерский свет и зелёные акценты создают атмосферу,
+              в которую хочется возвращаться. Мы создаём не просто причёски,
+              а уверенность и настроение.
             </p>
             <div className="mt-8 grid grid-cols-2 gap-4">
               {[
@@ -260,14 +264,14 @@ const Index = () => {
                 { icon: 'Clock', t: 'Удобная запись' },
                 { icon: 'Gem', t: 'Премиум-уход' },
               ].map((f) => (
-                <div key={f.t} className="flex items-center gap-3 rounded-xl bg-card p-4">
+                <div key={f.t} className="flex items-center gap-3 rounded-xl bg-card p-4 transition-transform hover:scale-105">
                   <Icon name={f.icon} size={22} className="text-primary" />
                   <span className="text-sm font-medium">{f.t}</span>
                 </div>
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="reveal-scale grid grid-cols-2 gap-4">
             <img src={WORK1} alt="Работа салона" className="aspect-[3/4] w-full rounded-2xl object-cover hover-lift" />
             <img src={WORK2} alt="Работа салона" className="mt-8 aspect-[3/4] w-full rounded-2xl object-cover hover-lift" />
           </div>
@@ -277,16 +281,16 @@ const Index = () => {
       {/* SERVICES */}
       <section id="services" className="py-20">
         <div className="container">
-          <div className="mb-12 text-center">
+          <div className="reveal mb-12 text-center">
             <span className="text-sm uppercase tracking-[0.3em] text-primary">Услуги</span>
             <h2 className="mt-4 font-display text-4xl font-semibold md:text-5xl">Что мы умеем</h2>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 [perspective:1200px] sm:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((s, i) => (
               <div
                 key={s.title}
-                className="hover-lift group rounded-2xl border border-border bg-card p-7"
-                style={{ animationDelay: `${i * 60}ms` }}
+                className="reveal tilt-3d group rounded-2xl border border-border bg-card p-7"
+                style={{ transitionDelay: `${i * 70}ms` }}
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                   <Icon name={s.icon} size={24} />
@@ -299,28 +303,33 @@ const Index = () => {
         </div>
       </section>
 
-      {/* MASTERS */}
-      <section id="masters" className="border-y border-border/60 bg-secondary/40 py-20">
+      {/* GALLERY — INTERIOR */}
+      <section id="gallery" className="border-y border-border/60 bg-secondary/40 py-20">
         <div className="container">
-          <div className="mb-12 text-center">
-            <span className="text-sm uppercase tracking-[0.3em] text-primary">Мастера</span>
-            <h2 className="mt-4 font-display text-4xl font-semibold md:text-5xl">Наша команда</h2>
+          <div className="reveal mb-12 text-center">
+            <span className="text-sm uppercase tracking-[0.3em] text-primary">Интерьер</span>
+            <h2 className="mt-4 font-display text-4xl font-semibold md:text-5xl">Атмосфера салона</h2>
+            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+              Кирпич, золото и дизайнерский свет — пространство, в котором приятно
+              провести время и преобразиться.
+            </p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {MASTERS.map((m) => (
-              <div key={m.name} className="hover-lift rounded-2xl bg-card p-7 text-center">
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-4xl">
-                  {m.emoji}
-                </div>
-                <h3 className="mt-4 font-display text-2xl font-semibold">{m.name}</h3>
-                <p className="text-sm text-primary">{m.role}</p>
-                <div className="mt-3 flex flex-wrap justify-center gap-2">
-                  {m.tags.map((t) => (
-                    <span key={t} className="rounded-full bg-secondary px-3 py-1 text-xs">
-                      {t}
-                    </span>
-                  ))}
-                </div>
+          <div className="grid auto-rows-[220px] grid-cols-1 gap-4 md:grid-cols-3">
+            {GALLERY.map((g, i) => (
+              <div
+                key={i}
+                className={`reveal-scale group relative overflow-hidden rounded-2xl ${g.span}`}
+                style={{ transitionDelay: `${i * 120}ms` }}
+              >
+                <img
+                  src={g.src}
+                  alt={g.alt}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <span className="absolute bottom-4 left-4 translate-y-4 text-sm font-medium text-background opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                  {g.alt}
+                </span>
               </div>
             ))}
           </div>
@@ -330,15 +339,15 @@ const Index = () => {
       {/* PRICES */}
       <section id="prices" className="py-20">
         <div className="container max-w-3xl">
-          <div className="mb-12 text-center">
+          <div className="reveal mb-12 text-center">
             <span className="text-sm uppercase tracking-[0.3em] text-primary">Прайс</span>
             <h2 className="mt-4 font-display text-4xl font-semibold md:text-5xl">Цены на услуги</h2>
           </div>
-          <div className="overflow-hidden rounded-2xl border border-border bg-card">
+          <div className="reveal overflow-hidden rounded-2xl border border-border bg-card">
             {PRICES.map((p, i) => (
               <div
                 key={p.name}
-                className={`flex items-center justify-between gap-4 px-6 py-4 ${
+                className={`flex items-center justify-between gap-4 px-6 py-4 transition-colors hover:bg-primary/5 ${
                   i % 2 ? 'bg-secondary/30' : ''
                 }`}
               >
@@ -353,7 +362,7 @@ const Index = () => {
             ))}
           </div>
           <div className="mt-8 text-center">
-            <Button size="lg" className="rounded-full" onClick={() => setOpen(true)}>
+            <Button size="lg" className="rounded-full transition-transform hover:scale-105" onClick={() => setOpen(true)}>
               Записаться на услугу
             </Button>
           </div>
@@ -363,16 +372,20 @@ const Index = () => {
       {/* REVIEWS */}
       <section id="reviews" className="border-y border-border/60 bg-secondary/40 py-20">
         <div className="container">
-          <div className="mb-12 text-center">
+          <div className="reveal mb-12 text-center">
             <span className="text-sm uppercase tracking-[0.3em] text-primary">Отзывы</span>
             <h2 className="mt-4 font-display text-4xl font-semibold md:text-5xl">Что говорят клиенты</h2>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {REVIEWS.map((r) => (
-              <div key={r.name} className="hover-lift rounded-2xl bg-card p-7">
+          <div className="grid gap-6 [perspective:1200px] md:grid-cols-3">
+            {REVIEWS.map((r, i) => (
+              <div
+                key={r.name}
+                className="reveal tilt-3d rounded-2xl bg-card p-7"
+                style={{ transitionDelay: `${i * 100}ms` }}
+              >
                 <div className="flex gap-1 text-accent">
-                  {[...Array(r.stars)].map((_, i) => (
-                    <Icon key={i} name="Star" size={18} className="fill-current" />
+                  {[...Array(r.stars)].map((_, j) => (
+                    <Icon key={j} name="Star" size={18} className="fill-current" />
                   ))}
                 </div>
                 <p className="mt-4 text-muted-foreground">«{r.text}»</p>
@@ -386,7 +399,7 @@ const Index = () => {
       {/* CONTACTS */}
       <section id="contacts" className="py-20">
         <div className="container grid gap-10 md:grid-cols-2">
-          <div>
+          <div className="reveal">
             <span className="text-sm uppercase tracking-[0.3em] text-primary">Контакты</span>
             <h2 className="mt-4 font-display text-4xl font-semibold md:text-5xl">Приходите в гости</h2>
             <div className="mt-8 space-y-5">
@@ -414,12 +427,12 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <Button size="lg" className="mt-8 rounded-full" onClick={() => setOpen(true)}>
+            <Button size="lg" className="mt-8 rounded-full transition-transform hover:scale-105" onClick={() => setOpen(true)}>
               Онлайн-запись
               <Icon name="ArrowRight" size={18} className="ml-1" />
             </Button>
           </div>
-          <div className="overflow-hidden rounded-2xl border border-border">
+          <div className="reveal-scale overflow-hidden rounded-2xl border border-border">
             <iframe
               title="Карта"
               src="https://yandex.ru/map-widget/v1/?ll=56.250668%2C57.993070&z=16&pt=56.250668,57.993070,pm2rdm"
