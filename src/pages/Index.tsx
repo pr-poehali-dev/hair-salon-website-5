@@ -41,12 +41,15 @@ const NAV = [
 ];
 
 const SERVICES = [
-  { icon: 'Scissors', title: 'Стрижки', desc: 'Авторские стрижки по форме лица, мужские и детские, оформление чёлки.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/7038af88-a1f2-43ed-bbb6-36109f81d020.png' },
-  { icon: 'Palette', title: 'Окрашивание', desc: 'Сложное окрашивание, омбре, балаяж, мелирование, тонирование, колорирование.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/91e24a1c-ede1-4d01-bca5-6407d452db1d.png' },
-  { icon: 'Sparkles', title: 'Наращивание волос', desc: 'Натуральные донорские волосы, безопасные технологии, идеальная длина.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/4f2c8922-3028-4290-be64-f3f9a81fd5eb.png' },
-  { icon: 'Droplets', title: 'Уход и восстановление', desc: 'Кератин, ботокс, нанопластика, биоламинирование, трихологический пилинг.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/db87e1b0-f985-45cf-95c2-44bf1fdd46b1.png' },
-  { icon: 'Wind', title: 'Укладки', desc: 'Голливудские локоны, вечерние и свадебные причёски, прикорневой объём.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/aa2dc6f9-f5bc-424b-8c62-ec31faa40957.png' },
-  { icon: 'Eye', title: 'Брови, ресницы, макияж', desc: 'Ламинирование ресниц, оформление бровей, дневной и вечерний макияж.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/694c1433-f226-4944-8fac-5cf37220c6e9.png' },
+  { icon: 'Palette', title: 'Окрашивание в один тон', price: '3 000–25 000 ₽', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/1e2a1b28-4b51-410f-9cd6-de76b57e51fc.jpg' },
+  { icon: 'Sparkles', title: 'Окрашивание волос (сложное)', price: '8 000–25 000 ₽', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/c78eb976-aa68-43c4-b8cf-e35b1900fd77.jpg' },
+  { icon: 'Wind', title: 'Укладки', price: '1 500–4 000 ₽', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/6668e948-f670-41f4-9bcf-b4f67bfb5341.jpg' },
+  { icon: 'ArrowUpNarrowWide', title: 'Прикорневой объём', price: '3 800–4 500 ₽', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/a3520fcf-2c39-4e0e-891b-2ad9a3721a61.jpg' },
+  { icon: 'Eye', title: 'Макияж · Брови', price: '800–3 500 ₽', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/b9911133-5a87-4cd8-ad34-d059714ccf53.jpg' },
+  { icon: 'Microscope', title: 'Трихологический пилинг', price: '3 000–13 600 ₽', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/f33fb248-f910-4012-9121-c9faabc2a68f.jpg' },
+  { icon: 'Droplets', title: 'Уход для волос', price: '3 500–6 900 ₽', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/ecbc07d7-47ea-4025-8cf0-c8155cf395f8.jpg' },
+  { icon: 'Layers', title: 'Наращивание · Донорские волосы', price: 'по договорённости', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/f4bbb933-5615-40f9-9f77-acf3aa123dc3.jpg' },
+  { icon: 'GraduationCap', title: 'Обучающий курс «Трансформация волос»', price: '22 000 ₽', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/files/f33fb248-f910-4012-9121-c9faabc2a68f.jpg' },
 ];
 
 const PRICES = [
@@ -327,31 +330,34 @@ const Index = () => {
             <span className="text-sm uppercase tracking-[0.3em] text-primary">Услуги</span>
             <h2 className="mt-4 font-display text-4xl font-semibold md:text-5xl">Что мы умеем</h2>
           </div>
-          <div className="grid gap-6 [perspective:1200px] sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {SERVICES.map((s, i) => (
-              <div
+              <button
                 key={s.title}
-                className="reveal tilt-3d group overflow-hidden rounded-2xl border border-border bg-card"
-                style={{ transitionDelay: `${i * 70}ms` }}
+                onClick={() => setOpen(true)}
+                className="reveal hover-lift group overflow-hidden rounded-2xl border border-border bg-card text-left"
+                style={{ transitionDelay: `${(i % 4) * 70}ms` }}
               >
-                <div className="relative h-44 overflow-hidden">
+                <div className="relative aspect-square overflow-hidden">
                   <img
                     src={s.img}
                     alt={s.title}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
-                  <div className="absolute bottom-3 left-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg">
-                    <Icon name={s.icon} size={22} />
+                  <div className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-xl bg-background/85 text-primary backdrop-blur-sm transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Icon name={s.icon} size={18} />
                   </div>
                 </div>
-                <div className="p-7 pt-5">
-                  <h3 className="font-display text-2xl font-semibold">{s.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                <div className="p-5">
+                  <div className="font-display text-xl font-semibold text-primary">{s.price}</div>
+                  <div className="mt-1 line-clamp-2 text-sm text-muted-foreground">{s.title}</div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
+          <p className="reveal mt-8 text-center text-sm text-muted-foreground">
+            Нажмите на услугу, чтобы записаться · полный прайс смотрите ниже
+          </p>
         </div>
       </section>
 
