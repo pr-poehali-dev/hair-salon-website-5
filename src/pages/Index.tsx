@@ -25,6 +25,9 @@ const PORTFOLIO = [
   { src: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/db87e1b0-f985-45cf-95c2-44bf1fdd46b1.png', title: 'Кератиновое выпрямление', tag: 'Уход' },
   { src: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/91e24a1c-ede1-4d01-bca5-6407d452db1d.png', title: 'Холодный блонд', tag: 'Окрашивание' },
   { src: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/aa2dc6f9-f5bc-424b-8c62-ec31faa40957.png', title: 'Балаяж с растяжкой', tag: 'Окрашивание' },
+  { src: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/4f2c8922-3028-4290-be64-f3f9a81fd5eb.png', title: 'Наращивание 65 см · 88 г', tag: 'Наращивание' },
+  { src: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/7038af88-a1f2-43ed-bbb6-36109f81d020.png', title: 'Стрижка каре с укладкой', tag: 'Стрижки' },
+  { src: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/694c1433-f226-4944-8fac-5cf37220c6e9.png', title: 'Оформление бровей', tag: 'Брови' },
 ];
 
 const NAV = [
@@ -38,12 +41,12 @@ const NAV = [
 ];
 
 const SERVICES = [
-  { icon: 'Scissors', title: 'Стрижки', desc: 'Авторские стрижки по форме лица, мужские и детские, оформление чёлки.' },
-  { icon: 'Palette', title: 'Окрашивание', desc: 'Сложное окрашивание, омбре, балаяж, мелирование, тонирование, колорирование.' },
-  { icon: 'Sparkles', title: 'Наращивание волос', desc: 'Натуральные донорские волосы, безопасные технологии, идеальная длина.' },
-  { icon: 'Droplets', title: 'Уход и восстановление', desc: 'Кератин, ботокс, нанопластика, биоламинирование, трихологический пилинг.' },
-  { icon: 'Wind', title: 'Укладки', desc: 'Голливудские локоны, вечерние и свадебные причёски, прикорневой объём.' },
-  { icon: 'Eye', title: 'Брови, ресницы, макияж', desc: 'Ламинирование ресниц, оформление бровей, дневной и вечерний макияж.' },
+  { icon: 'Scissors', title: 'Стрижки', desc: 'Авторские стрижки по форме лица, мужские и детские, оформление чёлки.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/7038af88-a1f2-43ed-bbb6-36109f81d020.png' },
+  { icon: 'Palette', title: 'Окрашивание', desc: 'Сложное окрашивание, омбре, балаяж, мелирование, тонирование, колорирование.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/91e24a1c-ede1-4d01-bca5-6407d452db1d.png' },
+  { icon: 'Sparkles', title: 'Наращивание волос', desc: 'Натуральные донорские волосы, безопасные технологии, идеальная длина.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/4f2c8922-3028-4290-be64-f3f9a81fd5eb.png' },
+  { icon: 'Droplets', title: 'Уход и восстановление', desc: 'Кератин, ботокс, нанопластика, биоламинирование, трихологический пилинг.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/db87e1b0-f985-45cf-95c2-44bf1fdd46b1.png' },
+  { icon: 'Wind', title: 'Укладки', desc: 'Голливудские локоны, вечерние и свадебные причёски, прикорневой объём.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/aa2dc6f9-f5bc-424b-8c62-ec31faa40957.png' },
+  { icon: 'Eye', title: 'Брови, ресницы, макияж', desc: 'Ламинирование ресниц, оформление бровей, дневной и вечерний макияж.', img: 'https://cdn.poehali.dev/projects/9f544100-917c-4405-ba74-11f49fe9c8cb/bucket/694c1433-f226-4944-8fac-5cf37220c6e9.png' },
 ];
 
 const PRICES = [
@@ -328,14 +331,24 @@ const Index = () => {
             {SERVICES.map((s, i) => (
               <div
                 key={s.title}
-                className="reveal tilt-3d group rounded-2xl border border-border bg-card p-7"
+                className="reveal tilt-3d group overflow-hidden rounded-2xl border border-border bg-card"
                 style={{ transitionDelay: `${i * 70}ms` }}
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                  <Icon name={s.icon} size={24} />
+                <div className="relative h-44 overflow-hidden">
+                  <img
+                    src={s.img}
+                    alt={s.title}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
+                  <div className="absolute bottom-3 left-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg">
+                    <Icon name={s.icon} size={22} />
+                  </div>
                 </div>
-                <h3 className="mt-5 font-display text-2xl font-semibold">{s.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                <div className="p-7 pt-5">
+                  <h3 className="font-display text-2xl font-semibold">{s.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                </div>
               </div>
             ))}
           </div>
